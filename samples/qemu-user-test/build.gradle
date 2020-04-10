@@ -1,0 +1,32 @@
+plugins 
+{
+    id 'cpp-library'
+    id 'cpp-unit-test'
+    id 'pl.gradle-qemu' version '0.2.0-SNAPSHOT'
+}
+
+// project
+
+tasks.register('qemuTest') {
+    description = 'Runs emulated unit tests.'
+    group = 'verification'
+}
+
+library
+{
+    targetMachines = [ machines.linux.x86 ]
+}
+
+unitTest
+{
+    targetMachines = [ machines.linux.x86 ]
+    
+    binaries.whenElementFinalized { binary -> 
+        def name = binary.name.capitalize()
+        def qemu = qemu.registerUser("qemuUser${name}") {
+            architecture = 'i386'
+            program = binary.executableFile
+        }
+        qemuTest.dependsOn qemu
+    }
+}

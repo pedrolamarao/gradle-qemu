@@ -1,0 +1,65 @@
+plugins 
+{
+    id 'java-gradle-plugin'
+}
+
+// properties
+
+group 'aasgard'
+version '0.2.0-SNAPSHOT'
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+
+// project
+
+gradlePlugin 
+{
+    plugins 
+    {
+        asm 
+        {
+            id = 'pl.gradle-qemu'
+            implementationClass = 'com.github.pedrolamarao.gradle.qemu.QemuPlugin'
+        }
+    }
+}
+
+sourceSets 
+{
+    integrationTest {
+        compileClasspath += sourceSets.main.output
+        runtimeClasspath += sourceSets.main.output
+    }
+}
+
+configurations 
+{
+    integrationTestImplementation.extendsFrom testImplementation
+    integrationTestRuntimeOnly.extendsFrom testRuntimeOnly
+}
+
+dependencies
+{
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.6.2'    
+}
+
+repositories
+{
+    mavenLocal()
+    mavenCentral()
+}
+
+// tasks
+
+test.configure {
+    useJUnitPlatform()
+}
+
+tasks.register('integrationTest', Test) {
+    description = 'Runs integration tests.'
+    group = 'verification'
+    testClassesDirs = sourceSets.integrationTest.output.classesDirs
+    classpath = sourceSets.integrationTest.runtimeClasspath
+    shouldRunAfter test
+    useJUnitPlatform()
+}

@@ -1,0 +1,3 @@
+rootProject.name = 'qemu-unit-test'
+
+includeBuild '../..'
