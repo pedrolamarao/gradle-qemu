@@ -41,6 +41,8 @@ public abstract class QemuSystemSpec
 	
 	public abstract DirectoryProperty getTemporaryDir ();
 	
+	public abstract Property<String> getTool ();
+	
 	// utilities
 	
 	public void configure (Action<? super QemuSystemSpec> action)

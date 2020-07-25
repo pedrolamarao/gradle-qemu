@@ -20,7 +20,10 @@ public final class Qemu
 	public static Process run (QemuSystemSpec spec) throws IOException
 	{
 		final ArrayList<String> command = new ArrayList<>();
-		command.add(spec.getArchitecture().map(it -> "qemu-system-" + it).get());
+		if (spec.getTool().isPresent())
+			command.add(spec.getTool().get());
+		else
+			command.add(spec.getArchitecture().map(it -> "qemu-system-" + it).get());
 		ifPresent(spec.getBios(), it -> addAll(command, "-bios", it.getAsFile().toString()));
 		ifPresent(spec.getCdrom(), it -> addAll(command, "-cdrom", it.getAsFile().toString()));
 		ifPresent(spec.getProcessor(), it -> addAll(command, "-cpu", it));
